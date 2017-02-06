@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<style type="text/css">
+		html, body { height: 100%; margin: 0; padding: 0; }
+		#map { height: 100%;}
+
+	</style>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/custom.css">
 </head>
 <body>
+	<div id="sidebar">
+		<div id="input-view">
+			<p>fuck</p>
+		</div>
+		<div id="list-view">
+			<p>shit</p>
+		</div>
+	</div>
 
 
+	<div id="map"></div>
 
+	<script type="text/javascript">
 
+		var map;
+		function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: {lat: -34.397, lng: 150.644},
+				zoom: 8
+			});
+		}
 
-
-
-
-
-
-
-
-	<script src="js/app.js"></script>
+	</script>
+	<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAVrjanTWpxAbUia-biD36rYFw-m4pZKI&callback=initMap">
+</script>
 </body>
 </html>
