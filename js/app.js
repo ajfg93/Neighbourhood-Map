@@ -91,16 +91,16 @@ function initMap() {
         $.ajax(FoursqureUrl)
         .done((function(currentMarker){
             return function(data){
-               var items = data.response.groups[0].items;
-               var venue = items[0].venue;
+             var items = data.response.groups[0].items;
+             var venue = items[0].venue;
 
-               var venueName = venue.name;
-               var venueRating = venue.rating;
-               var venuePrice = venue.price.message;
-               var venueId = venue.id;
-               var venueUrl = 'https://foursquare.com/v/' + venueId;
+             var venueName = venue.name;
+             var venueRating = venue.rating;
+             var venuePrice = venue.price.message;
+             var venueId = venue.id;
+             var venueUrl = 'https://foursquare.com/v/' + venueId;
 
-               currentMarker.addListener('click', function(){
+             currentMarker.addListener('click', function(){
                 var contentStr = 
                 '<div id="content">'+
                 '<div id="siteNotice">'+
@@ -127,9 +127,8 @@ function initMap() {
                 infowindow.setContent(contentStr);
                 infowindow.open(map, currentMarker);
             });         
-
-           }    
-       })(markers[i]))
+         }    
+     })(markers[i]))
         .fail(function(error){
             console.log('errro msg');
             console.log(error);
@@ -151,7 +150,6 @@ var vm = {
     data:{
         locationsRaw: locationsRaw,
         inputFilter: "",
-        markers: markers,
         filterLocationsRaw: [],
     },
     computed:{
@@ -167,17 +165,24 @@ var vm = {
         },
     },
     methods: {
-        initMap: initMap,
+
     },
     watch: {
         filterLocationsRaw: function(){
             try{
-                deleteMarkers();
+                clearMarkers();
+                var titles = [];
                 for (var i = 0; i < this.filterLocationsRaw.length; i++) {
-                    var marker = getMarkerInfo(this.filterLocationsRaw[i]);
-                    addMarker(marker);
+                    titles.push(getMarkerInfo(this.filterLocationsRaw[i]).title);
                 } 
-                setMapOnAll(map);
+                
+                for (var i = 0; i < markers.length; i++) {
+                    for (var j = 0; j < titles.length; j++) {
+                        if(markers[i].title === titles[j]){
+                            markers[i].setMap(map);
+                        }
+                    }
+                }
             }
             catch(error){
                 console.log("IN WATCH ERROR");
