@@ -91,22 +91,45 @@ function initMap() {
         $.ajax(FoursqureUrl)
         .done((function(currentMarker){
             return function(data){
-             var items = data.response.groups[0].items;
-             var venue = items[0].venue;
+               var items = data.response.groups[0].items;
+               var venue = items[0].venue;
 
-             var venueName = venue.name;
-             var venueRating = venue.rating;
-             var venuePrice = venue.price.message;
-             var venueId = venue.id;
-             var venueUrl = 'https://foursquare.com/v/' + venueId;
+               var venueName = venue.name;
+               var venueRating = venue.rating;
+               var venuePrice = venue.price.message;
+               var venueId = venue.id;
+               var venueUrl = 'https://foursquare.com/v/' + venueId;
 
-             currentMarker.addListener('click', function(){
-                    infowindow.setContent(this.title + venueName);
-                    infowindow.open(map, currentMarker);
-             });         
+               currentMarker.addListener('click', function(){
+                var contentStr = 
+                '<div id="content">'+
+                '<div id="siteNotice">'+
+                '</div>'+
+                '<h1 id="firstHeading" class="firstHeading">' + this.title + '</h1>'+
+                '<div id="bodyContent">'+
+                '<p>Drinks:</p>' + 
+                '<ul>' + 
+                '<li>' + 
+                'name:' + venueName +
+                '</li>' +
+                '<li>' + 
+                'price:' + venuePrice +
+                '</li>' +
+                '<li>' + 
+                'rating:' + venueRating +
+                '</li>' +
+                '<li>' + 
+                'url:' + '<a target="_blank" href="' + venueUrl + '">' + venueUrl +'</a>' + 
+                '</li>' +
+                '</ul>' +
+                '</div>'+
+                '</div>';
+                infowindow.setContent(contentStr);
+                infowindow.open(map, currentMarker);
+            });         
 
-         }    
-         })(markers[i]))
+           }    
+       })(markers[i]))
         .fail(function(error){
             console.log('errro msg');
             console.log(error);
