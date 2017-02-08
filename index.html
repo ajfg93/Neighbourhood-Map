@@ -26,10 +26,16 @@
 
 
 	<div id="map"></div>
-	<script scr="js/jquery.min.js"></script>
+	<!-- error one -->
+	<!-- <script scr="js/jquery.min.js"></script> -->
+	<!-- not error one, can't see any difference -->
+    <script src="js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		$.ajax();
+	</script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAVrjanTWpxAbUia-biD36rYFw-m4pZKI&callback=initMap"></script>
 	<script src="js/vue.js"></script>
 	<script src="js/app.js"></script>
-</script>
 </body>
 </html>

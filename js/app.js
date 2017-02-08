@@ -32,12 +32,12 @@ var markers = [];
 var map = null;
 
 function getMarkerInfo(locationRaw){
-    return {title: locationRaw.title,  lat: locationRaw.lat, lng: locationRaw.lng};
+    return {title: locationRaw.title, lat: locationRaw.lat, lng: locationRaw.lng};
 }
 
 function addMarker(location){
     var marker = new google.maps.Marker({
-        position: location,
+        position: {lat: location.lat, lng: location.lng},
         map: map,
         title: location.title,
     });
@@ -70,13 +70,12 @@ function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
         center: center,
-        scrollwheel: true,
-        zoom: 14
+        scrollwheel: false,
+        zoom: 14,
     });
 
     for (var i = 0; i < locationsRaw.length; i++) {
         var location = getMarkerInfo(locationsRaw[i]);
-        console.log(location);
         addMarker(location);
     }
 
@@ -85,15 +84,39 @@ function initMap() {
     //bind 3rd party info to marker
     var infowindow = new google.maps.InfoWindow({});
     for (var i = 0; i < markers.length; i++) {
-        markers[i].addListener('click', (function(titleCopy, markerCopy){
-            return function(){
-                infowindow.setContent(titleCopy);
-                console.log('LOOP CLOSURE!');
-                infowindow.open(map, markerCopy);
-            }
-        })(markers[i].title, markers[i]));
+        //send ajax here
+        var lat = markers[i].position.lat();
+        var lng = markers[i].position.lng();
+        var FoursqureUrl = 'https://api.foursquare.com/v2/venues/explore?ll=' + lat + ',' + lng + '&client_id=KNHA2K4JFSVIEKZABFECB1ROVE13KJ3YEGQZVLWLANGCL1GP&client_secret=ED2KGLEWTQLCMZW1OFXBXIOEKGILIKL1DUA1EE5WAN1USQBB&v=20170208&setion=drinks&limit=1&price=1,2,3,4'
+        $.ajax(FoursqureUrl)
+        .done((function(currentMarker){
+            return function(data){
+             var items = data.response.groups[0].items;
+             var venue = items[0].venue;
+
+             var venueName = venue.name;
+             var venueRating = venue.rating;
+             var venuePrice = venue.price.message;
+             var venueId = venue.id;
+             var venueUrl = 'https://foursquare.com/v/' + venueId;
+
+             currentMarker.addListener('click', function(){
+                    infowindow.setContent(this.title + venueName);
+                    infowindow.open(map, currentMarker);
+             });         
+
+         }    
+         })(markers[i]))
+        .fail(function(error){
+            console.log('errro msg');
+            console.log(error);
+        })
+        .always(function(){
+        });        
+
     }
 }
+
 
 function Foo(){
     console.log('123');
@@ -142,6 +165,5 @@ var vm = {
 };
 
 var app = new Vue(vm);   
-
 
 
