@@ -10,12 +10,11 @@
 			<div class="col-lg-3">
 				<div id="sidebar">
 					<div class="input-view">
-						<input type="text" placeholder="filter" v-model.lazy="inputFilter" class="form-control" id="input-bar">
+						<input type="text" placeholder="filter" data-bind="value:inputFilter" class="form-control" id="input-bar">
 						<button class="btn btn-primary">Filter</button>
 					</div>
-					<div class="list-group">
-						<a href="javascript:void(0)" class="list-group-item" v-for="item in filterLocations" v-on:click="openInfoWindow" >
-							{{ item.title }}
+					<div class="list-group" data-bind="foreach: filterLocations">
+						<a href="javascript:void(0)" class="list-group-item" data-bind="text: title, click: $parent.openInfoWindow">
 						</a>
 					</div>
 				</div>				
@@ -30,7 +29,7 @@
 
 	<script src="js/jquery.min.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAVrjanTWpxAbUia-biD36rYFw-m4pZKI&callback=initMap"></script>
-	<script src="js/vue.js"></script>
+	<script src="js/knockout-3.4.1.js"></script>
 	<script src="js/app.js"></script>
 </body>
 </html>
