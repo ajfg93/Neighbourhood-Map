@@ -100,16 +100,16 @@ function initMap() {
         $.ajax(FoursqureUrl)
         .done((function(currentMarker){
             return function(data){
-             var items = data.response.groups[0].items;
-             var venue = items[0].venue;
+               var items = data.response.groups[0].items;
+               var venue = items[0].venue;
 
-             var venueName = venue.name;
-             var venueRating = venue.rating;
-             var venuePrice = venue.price.message;
-             var venueId = venue.id;
-             var venueUrl = 'https://foursquare.com/v/' + venueId;
+               var venueName = venue.name;
+               var venueRating = venue.rating;
+               var venuePrice = venue.price.message;
+               var venueId = venue.id;
+               var venueUrl = 'https://foursquare.com/v/' + venueId;
 
-             currentMarker.addListener('click', function(){
+               currentMarker.addListener('click', function(){
                 //concat content string
                 var contentStr = 
                 '<div id="content">'+
@@ -137,8 +137,8 @@ function initMap() {
                 infowindow.setContent(contentStr);
                 infowindow.open(map, currentMarker);
             });         
-         }    
-     })(markers[i]))
+           }    
+       })(markers[i]))
         .fail(function(error){
             alert("A error occured, try refresh or call the web admnistrator");
             console.log(error);
@@ -151,7 +151,7 @@ function initMap() {
 }
 
 //Configure Vue js.
-
+var baba;
 var vm = {
     el: '#sidebar',
     data:{
@@ -174,7 +174,16 @@ var vm = {
         },
     },
     methods: {
-
+        openInfoWindow: function(event){
+            var target = $(event.target);
+            var text = target.text().trim();
+            for (var i = 0; i < markers.length; i++) {
+                if(markers[i].title === text){
+                    google.maps.event.trigger(markers[i], 'click');
+                    break;
+                }
+            }
+        }
     },
     watch: {
         //every time the `filterLocationsRaw` property changes, this function would get called.
@@ -196,11 +205,11 @@ var vm = {
                         }
                     }
                 }
+            }
         }
-    }
-};
+    };
 
 
-var app = new Vue(vm);   
+    var app = new Vue(vm);   
 
 

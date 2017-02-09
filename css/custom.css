@@ -1,4 +1,7 @@
-/*#map { float:right; width: 80%;}*/
-
-/*#sidebar { float:left; width: 20%; }*/
-
+html, body { height: 100%; margin: 0; padding: 0; }
+#map { height: 100%;}
+.container { height:100%; }
+.row { height:100%; }
+.col-lg-9 { height: 100%; }
+#input-bar {display: inline-block; width: inherit;}
+.input-view {margin-top:10px; margin-bottom: 10px;}
