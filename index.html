@@ -4,29 +4,41 @@
 	<style type="text/css">
 		html, body { height: 100%; margin: 0; padding: 0; }
 		#map { height: 100%;}
-
+		.container { height:100%; }
+		.row { height:100%; }
+		.col-lg-10 { height: 100%; }
 	</style>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/custom.css">
+
 </head>
 <body>
-	<div id="sidebar">
-		<div id="input-view">
-			<input type="text" placeholder="filter" v-model.lazy="inputFilter">
-			<button>Filter</button>
-		</div>
-		<div id="list-view">
-			<ul>
-				<li v-for="item in filterLocations">
-					<a href="#">{{ item.title }}</a>
-				</li>
-			</ul>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-2">
+				<div id="sidebar">
+					<div id="input-view">
+						<input type="text" placeholder="filter" v-model.lazy="inputFilter">
+						<button>Filter</button>
+					</div>
+					<div id="list-view">
+						<ul>
+							<li v-for="item in filterLocations">
+								<a href="#">{{ item.title }}</a>
+							</li>
+						</ul>
+					</div>
+				</div>				
+			</div>
+			<div class="col-lg-10">
+				<div id="map"></div>
+			</div>
 		</div>
 	</div>
 
 
-	<div id="map"></div>
-    <script src="js/jquery.min.js"></script>
+
+	<script src="js/jquery.min.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAVrjanTWpxAbUia-biD36rYFw-m4pZKI&callback=initMap"></script>
 	<script src="js/vue.js"></script>
 	<script src="js/app.js"></script>

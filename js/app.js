@@ -1,4 +1,4 @@
-//Create global variable
+//App data.
 var locationsRaw = 
 [
 {
@@ -30,6 +30,8 @@ var locationsRaw =
 
 var markers = [];
 var map = null;
+
+//Map manipulate functions.
 
 function getMarkerInfo(locationRaw){
     return {title: locationRaw.title, lat: locationRaw.lat, lng: locationRaw.lng};
@@ -63,6 +65,8 @@ function deleteMarkers(){
     markers = [];
 }
 
+
+//Google map jsonp callback.
 function initMap() {
     //Create a map center.
     var center = getMarkerInfo(locationsRaw[0]);
@@ -74,20 +78,25 @@ function initMap() {
         zoom: 14,
     });
 
+    //Initialize markers.
     for (var i = 0; i < locationsRaw.length; i++) {
         var location = getMarkerInfo(locationsRaw[i]);
         addMarker(location);
     }
 
+    //Display markers on the map.
     setMapOnAll(map);  
 
-    //bind 3rd party info to marker
+    //Create 1 infowindow and bind 3rd party info to each marker.
     var infowindow = new google.maps.InfoWindow({});
     for (var i = 0; i < markers.length; i++) {
-        //send ajax here
+        //get api query needed info, latitude and longtitude
         var lat = markers[i].position.lat();
         var lng = markers[i].position.lng();
+        //concat request url, get 1 nearby drink shop
         var FoursqureUrl = 'https://api.foursquare.com/v2/venues/explore?ll=' + lat + ',' + lng + '&client_id=KNHA2K4JFSVIEKZABFECB1ROVE13KJ3YEGQZVLWLANGCL1GP&client_secret=ED2KGLEWTQLCMZW1OFXBXIOEKGILIKL1DUA1EE5WAN1USQBB&v=20170208&setion=drinks&limit=1&price=1,2,3,4'
+
+        //ajax call, using closure to pass `currentMarker`        
         $.ajax(FoursqureUrl)
         .done((function(currentMarker){
             return function(data){
@@ -101,6 +110,7 @@ function initMap() {
              var venueUrl = 'https://foursquare.com/v/' + venueId;
 
              currentMarker.addListener('click', function(){
+                //concat content string
                 var contentStr = 
                 '<div id="content">'+
                 '<div id="siteNotice">'+
@@ -130,20 +140,17 @@ function initMap() {
          }    
      })(markers[i]))
         .fail(function(error){
-            console.log('errro msg');
+            alert("A error occured, try refresh or call the web admnistrator");
             console.log(error);
         })
         .always(function(){
+            console.log("Ajax request completed");
         });        
 
     }
 }
 
-
-function Foo(){
-    console.log('123');
-}
-
+//Configure Vue js.
 
 var vm = {
     el: '#sidebar',
@@ -153,6 +160,7 @@ var vm = {
         filterLocationsRaw: [],
     },
     computed:{
+        // return a computed property, not modifying original raw data.
         filterLocations: function(){
             var re = [];
             for (var i = 0; i < this.locationsRaw.length; i++) {
@@ -160,6 +168,7 @@ var vm = {
                     re.push(this.locationsRaw[i]);
                 }
             }
+            // store the result into a two-way binding data property for later watching events.
             this.filterLocationsRaw = re.slice();
             return re;
         },
@@ -168,14 +177,18 @@ var vm = {
 
     },
     watch: {
+        //every time the `filterLocationsRaw` property changes, this function would get called.
         filterLocationsRaw: function(){
-            try{
+                //every time the filtered result changes, clear all the markers on the map.
                 clearMarkers();
                 var titles = [];
+
+                //get titles of the filtered results, use them to choose which marker should be display again.
                 for (var i = 0; i < this.filterLocationsRaw.length; i++) {
                     titles.push(getMarkerInfo(this.filterLocationsRaw[i]).title);
                 } 
                 
+                //display filtered markers again.
                 for (var i = 0; i < markers.length; i++) {
                     for (var j = 0; j < titles.length; j++) {
                         if(markers[i].title === titles[j]){
@@ -183,14 +196,10 @@ var vm = {
                         }
                     }
                 }
-            }
-            catch(error){
-                console.log("IN WATCH ERROR");
-            }
-
         }
     }
 };
+
 
 var app = new Vue(vm);   
 
