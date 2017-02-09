@@ -1,9 +1,9 @@
 #How to run the program
-	
+## add a knockout js version	
 - swicth to the repo directory.
 - `python -m SimpleHTTPServer 5000`
 	- run a localhost with port **5000** (this is the port I configured in **Foursquare**)
-- visit `localhost:5000` in your brower
+- visit `localhost:5000/index2.html` in your brower
 
 
 

@@ -100,16 +100,16 @@ function initMap() {
         $.ajax(FoursqureUrl)
         .done((function(currentMarker){
             return function(data){
-               var items = data.response.groups[0].items;
-               var venue = items[0].venue;
+             var items = data.response.groups[0].items;
+             var venue = items[0].venue;
 
-               var venueName = venue.name;
-               var venueRating = venue.rating;
-               var venuePrice = venue.price.message;
-               var venueId = venue.id;
-               var venueUrl = 'https://foursquare.com/v/' + venueId;
+             var venueName = venue.name;
+             var venueRating = venue.rating;
+             var venuePrice = venue.price.message;
+             var venueId = venue.id;
+             var venueUrl = 'https://foursquare.com/v/' + venueId;
 
-               currentMarker.addListener('click', function(){
+             currentMarker.addListener('click', function(){
                 //concat content string
                 var contentStr = 
                 '<div id="content">'+
@@ -137,8 +137,8 @@ function initMap() {
                 infowindow.setContent(contentStr);
                 infowindow.open(map, currentMarker);
             });         
-           }    
-       })(markers[i]))
+         }    
+     })(markers[i]))
         .fail(function(error){
             alert("A error occured, try refresh or call the web admnistrator");
             console.log(error);
@@ -150,65 +150,50 @@ function initMap() {
     }
 }
 
-//Configure Vue js.
-var vm = {
-    el: '#sidebar',
-    data:{
-        locationsRaw: locationsRaw,
-        inputFilter: "",
-        filterLocationsRaw: [],
-    },
-    computed:{
-        // return a computed property, not modifying original raw data.
-        filterLocations: function(){
-            var re = [];
-            for (var i = 0; i < this.locationsRaw.length; i++) {
-                if (this.locationsRaw[i].title.match(new RegExp(this.inputFilter, 'g'))){
-                    re.push(this.locationsRaw[i]);
-                }
+//Configure Knockout js.
+
+var ViewModel = function(){
+    var self = this;
+    this.locationsRaw = locationsRaw;
+    this.inputFilter = ko.observable("");
+    this.filterLocations = ko.computed(function(){
+        var re = [];
+        var filter = this.inputFilter();
+        for (var i = 0; i < this.locationsRaw.length; i++) {
+            if (this.locationsRaw[i].title.match(new RegExp(filter, 'g'))){
+                re.push(this.locationsRaw[i]);
             }
-            // store the result into a two-way binding data property for later watching events.
-            this.filterLocationsRaw = re.slice();
-            return re;
-        },
-    },
-    methods: {
-        openInfoWindow: function(event){
-            var target = $(event.target);
-            var text = target.text().trim();
-            for (var i = 0; i < markers.length; i++) {
-                if(markers[i].title === text){
-                    google.maps.event.trigger(markers[i], 'click');
-                    break;
+        }
+        return re;
+    }, this);
+
+    this.filterLocationsWatcher = ko.computed(function(){
+        clearMarkers();
+        var titles = [];
+
+        for (var i = 0; i < this.filterLocations().length; i++) {
+            titles.push(getMarkerInfo(this.filterLocations()[i]).title);
+        } 
+        
+        for (var i = 0; i < markers.length; i++) {
+            for (var j = 0; j < titles.length; j++) {
+                if(markers[i].title === titles[j]){
+                    markers[i].setMap(map);
                 }
             }
         }
-    },
-    watch: {
-        //every time the `filterLocationsRaw` property changes, this function would get called.
-        filterLocationsRaw: function(){
-                //every time the filtered result changes, clear all the markers on the map.
-                clearMarkers();
-                var titles = [];
+    }, this);
 
-                //get titles of the filtered results, use them to choose which marker should be display again.
-                for (var i = 0; i < this.filterLocationsRaw.length; i++) {
-                    titles.push(getMarkerInfo(this.filterLocationsRaw[i]).title);
-                } 
-                
-                //display filtered markers again.
-                for (var i = 0; i < markers.length; i++) {
-                    for (var j = 0; j < titles.length; j++) {
-                        if(markers[i].title === titles[j]){
-                            markers[i].setMap(map);
-                        }
-                    }
-                }
+    this.openInfoWindow = function(element){
+        for (var i = 0; i < markers.length; i++) {
+            if(markers[i].title === element.title){
+                google.maps.event.trigger(markers[i], 'click');
+                break;
             }
         }
-    };
+    }
+}
 
 
-    var app = new Vue(vm);   
 
-
+ko.applyBindings(new ViewModel());
