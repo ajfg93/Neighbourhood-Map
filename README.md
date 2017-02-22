@@ -19,3 +19,6 @@
 - add marker animation (stop animation when infowindow closes)
 - add google map api error handler
 - improve 3rd party data retrieving failure alert experience (only alert once)
+
+#Update v1.2
+- improve code quality and fix small problems

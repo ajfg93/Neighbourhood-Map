@@ -147,6 +147,7 @@ function initMap() {
                 'url:' + '<a target="_blank" href="' + venueUrl + '">' + venueUrl +'</a>' + 
                 '</li>' +
                 '</ul>' +
+                '<h4>' + 'Power by Foursquare API' + '</h2>' + 
                 '</div>'+
                 '</div>';
                 infowindow.setContent(contentStr);
@@ -170,11 +171,15 @@ function initMap() {
     infowindow.addListener('closeclick', stopAnimateMarker);
 }
 
-//3rd party error handling
+//3rd party error handler
 if (error){
     alert('error occurred while retrieving Foursquare data!');
 }
 
+//google map api error handler
+function mapError(){
+    alert('Unable to load google map api, please refresh or contact your administrator');
+}
 
 //Configure Knockout js.
 
