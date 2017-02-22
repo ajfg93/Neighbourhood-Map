@@ -8,9 +8,9 @@
 
 #Library, API, Framework I use
 - KnockoutJS
-- Jquery 
+- jQuery 
 - Google Map
-- Foursqure 
+- Foursquare API 
 - Bootstrap 
 
 #Update v1.1
