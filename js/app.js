@@ -30,7 +30,7 @@ var locationsRaw =
 
 var markers = [];
 var map = null;
-
+var error = false;
 //Map manipulate functions.
 
 function getMarkerInfo(locationRaw){
@@ -65,6 +65,21 @@ function deleteMarkers(){
     markers = [];
 }
 
+//marker animation function
+function animateMarker(currentMarker){
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setAnimation(null);
+    }
+    currentMarker.setAnimation(google.maps.Animation.BOUNCE);
+}
+
+//stop all markers' animation
+function stopAnimateMarker(){
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setAnimation(null);
+    }
+}
+
 
 //Google map jsonp callback.
 function initMap() {
@@ -94,10 +109,10 @@ function initMap() {
         var lat = markers[i].position.lat();
         var lng = markers[i].position.lng();
         //concat request url, get 1 nearby drink shop
-        var FoursqureUrl = 'https://api.foursquare.com/v2/venues/explore?ll=' + lat + ',' + lng + '&client_id=KNHA2K4JFSVIEKZABFECB1ROVE13KJ3YEGQZVLWLANGCL1GP&client_secret=ED2KGLEWTQLCMZW1OFXBXIOEKGILIKL1DUA1EE5WAN1USQBB&v=20170208&setion=drinks&limit=1&price=1,2,3,4'
+        var foursquare = 'https://api.foursquare.com/v2/venues/explore?ll=' + lat + ',' + lng + '&client_id=KNHA2K4JFSVIEKZABFECB1ROVE13KJ3YEGQZVLWLANGCL1GP&client_secret=ED2KGLEWTQLCMZW1OFXBXIOEKGILIKL1DUA1EE5WAN1USQBB&v=20170208&setion=drinks&limit=1&price=1,2,3,4'
 
         //ajax call, using closure to pass `currentMarker`        
-        $.ajax(FoursqureUrl)
+        $.ajax(foursquare)
         .done((function(currentMarker){
             return function(data){
              var items = data.response.groups[0].items;
@@ -136,11 +151,13 @@ function initMap() {
                 '</div>';
                 infowindow.setContent(contentStr);
                 infowindow.open(map, currentMarker);
+                animateMarker(currentMarker);
             });         
+
          }    
      })(markers[i]))
         .fail(function(error){
-            alert("A error occured, try refresh or call the web admnistrator");
+            error = true;
             console.log(error);
         })
         .always(function(){
@@ -148,14 +165,23 @@ function initMap() {
         });        
 
     }
+
+    //add infowindow closeclick event listener
+    infowindow.addListener('closeclick', stopAnimateMarker);
 }
+
+//3rd party error handling
+if (error){
+    alert('error occurred while retrieving Foursquare data!');
+}
+
 
 //Configure Knockout js.
 
 var ViewModel = function(){
     var self = this;
     this.locationsRaw = locationsRaw;
-    this.inputFilter = ko.observable("");
+    this.inputFilter = ko.observable('');
     this.filterLocations = ko.computed(function(){
         var re = [];
         var filter = this.inputFilter();
@@ -188,6 +214,7 @@ var ViewModel = function(){
         for (var i = 0; i < markers.length; i++) {
             if(markers[i].title === element.title){
                 google.maps.event.trigger(markers[i], 'click');
+                // add a break so it doesn't need to iterate all over the array
                 break;
             }
         }

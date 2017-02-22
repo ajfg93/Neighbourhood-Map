@@ -13,3 +13,9 @@
 - Foursqure 
 - Bootstrap 
 
+#Update v1.1
+- add viewport and charset meta tag
+- modify container margin with media query
+- add marker animation (stop animation when infowindow closes)
+- add google map api error handler
+- improve 3rd party data retrieving failure alert experience (only alert once)
