@@ -1,24 +1,25 @@
-#How to run the program	
-- swicth to the repo directory.
-- `python -m SimpleHTTPServer 5000`
-	- run a localhost with port **5000** (this is the port I configured in **Foursquare**)
-- visit `localhost:5000` in your brower
+#Neighbourhood-Map
+A single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. 
 
+##Buidling tools
+* Google Map API
+* KnockoutJS
+* jQuery
+* BootStrap
+* FourSquare API
 
+#Quickstart
 
-#Library, API, Framework I use
-- KnockoutJS
-- Jquery 
-- Google Map
-- Foursqure 
-- Bootstrap 
+#Install
+I serve the files using a simple python module, feel free to use any other local server.
 
-#Update v1.1
-- add viewport and charset meta tag
-- modify container margin with media query
-- add marker animation (stop animation when infowindow closes)
-- add google map api error handler
-- improve 3rd party data retrieving failure alert experience (only alert once)
+```
+git clone https://github.com/ajfg93/Neighbourhood-Map
+```
+open a window prompt and change to project root directory
+```
+python -m SimpleHTTPServer 5000
+```
+**Please using port 5000 (3rd Party API port setting)**
 
-#Update v1.2
-- improve code quality and fix small problems
+visit http://localhost:5000/
