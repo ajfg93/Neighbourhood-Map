@@ -10,7 +10,7 @@ A single-page application featuring a map of your neighborhood or a neighborhood
 
 #Quickstart
 
-#Install
+##Install
 I serve the files using a simple python module, feel free to use any other local server.
 
 ```
