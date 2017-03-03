@@ -11,6 +11,9 @@ A single-page application featuring a map of your neighborhood or a neighborhood
 #Quickstart
 
 ##Install
+
+public address : http://35.164.204.199/
+
 I serve the files using a simple python module, feel free to use any other local server.
 
 ```
