@@ -1,18 +1,18 @@
-#Neighbourhood-Map
+# Neighbourhood-Map
 A single-page application featuring a map of your neighborhood or a neighborhood you would like to visit. 
 
-##Buidling tools
+## Buidling tools
 * Google Map API
 * KnockoutJS
 * jQuery
 * BootStrap
 * FourSquare API
 
-#Quickstart
+# Quickstart
 
-##Install
+## Install
 
-public address : http://35.164.204.199/
+public address :
 
 I serve the files using a simple python module, feel free to use any other local server.
 
